@@ -14,7 +14,8 @@ class ConfTree(object):
     def __init__(self, config_files=None):
         self.config_files = config_files if config_files else []
         if not isinstance(self.config_files, list):
-            raise Exception("config files must be a list of items that can be read from FS")
+            raise Exception("config files must be a list of items that can be"
+                            " read from FS")
         self.tree = {}
 
     def load_config_files(self):
@@ -43,11 +44,13 @@ class ConfTree(object):
             try:
                 data_tree = json.loads(data)
             except Exception:
-                raise Exception("Unable to load data as yaml or json from config file : {}".format(config_file))
+                raise Exception("Unable to load data as yaml or json from"
+                                " config file : {}".format(config_file))
 
         Log.debug("Loading default data from default config file : {}".format(config_file))
 
-        # If data was loaded into python datastructure then load it into the config tree
+        # If data was loaded into python datastructure then load it into the
+        # config tree
         self.merge_data_tree(data_tree)
 
     def merge_data_tree(self, data_tree):

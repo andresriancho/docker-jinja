@@ -72,8 +72,8 @@ class Core(object):
         Take all specefied datasources from cli and merge with any in config then
         try to import all datasources and raise exception if it fails.
         """
-        # TODO: Push datasources into conftree but because they are lists they wont merge easy
-        #  via dict.update()
+        # TODO: Push datasources into conftree but because they are lists they
+        # wont merge easy via dict.update()
         ds = self.args.get("--datasource", [])
         ds.extend(self.config.tree.get("datasources", []))
 
@@ -93,11 +93,12 @@ class Core(object):
                 datasource_path = os.path.splitext(os.path.basename(datasource_file))[0]
                 Log.debug("{0}".format(datasource_path))
 
-                # Import python file but do nothing with it because all datasources should
-                #  handle and register themself to jinja.
+                # Import python file but do nothing with it because all
+                # datasources should handle and register themself to jinja.
                 i = __import__(datasource_path)
 
-                # Auto load all filters and global functions if they follow name pattern
+                # Auto load all filters and global functions if they follow
+                # name pattern
                 for method in dir(i):
                     if method.lower().startswith("_filter_"):
                         method_name = method.replace("_filter_", "")
@@ -125,17 +126,20 @@ class Core(object):
         # Update the jinja environment with all custom functions & filters
         self._update_env(template.environment)
 
-        env_vars = self.config.get("env", {})
-        Log.debug("env_vars: {}".format(env_vars))
+        context = self.config.get_tree()
+        Log.info("Rendering context:")
+        for k, v in context.iteritems():
+            Log.info("  * %s: %s" % (k, v))
 
-        Log.info("rendering Dockerfile...")
-        out_data = template.render(**env_vars)
+        Log.info("Rendering Dockerfile...")
+        out_data = template.render(**context)
 
         Log.debug("\n******\nWriting to file\n*******")
         Log.debug(out_data)
 
         if "--outfile" not in self.args:
-            raise Exception("missing key '--outfile' in cli_args. Could not write to output file.")
+            raise Exception("missing key '--outfile' in cli_args. Could not"
+                            " write to output file.")
 
         with open(self.args["--outfile"], "w") as stream:
             Log.info("Writing to outfile...")
