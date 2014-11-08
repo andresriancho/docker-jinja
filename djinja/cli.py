@@ -18,7 +18,7 @@ def main():
 
     __docopt__ = """
     Usage:
-      ed -d DOCKERFILE -o OUTFILE [-s DSFILE]... [-e ENV]... [-c CONFIGFILE]
+      dj -d DOCKERFILE -o OUTFILE [-s DSFILE]... [-e ENV]... [-c CONFIGFILE]
          [-v ...] [-q] [-h] [--version]
 
     Options:
